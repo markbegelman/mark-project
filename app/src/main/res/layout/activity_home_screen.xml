@@ -1,0 +1,426 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomeScreen">
+
+
+    <TextView
+        android:id="@+id/goodTimeTextView"
+        android:layout_width="347dp"
+        android:layout_height="59dp"
+        android:gravity="top|left"
+        android:text="  Good Morning"
+        android:textColor="@color/black"
+        android:textSize="35dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.044" />
+
+    <LinearLayout
+        android:layout_width="306dp"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.305">
+
+        <Button
+            android:layout_width="125dp"
+            android:layout_height="58dp"
+            android:layout_marginStart="21dp"
+            android:background="@drawable/round_button"
+            android:onClick="onClickDailyTasks"
+            android:text="Random Challenge"
+            android:textAllCaps="false"
+
+            ></Button>
+
+        <Button
+            android:layout_width="125dp"
+            android:layout_height="58dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="0dp"
+            android:background="@drawable/round_button"
+            android:onClick="onClickWorkout"
+            android:text="1v1 Challenge"
+            android:textAllCaps="false"
+
+            ></Button>
+
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/reset"
+        android:layout_width="79dp"
+        android:layout_height="37dp"
+        android:gravity="center"
+        android:onClick="onClickReset"
+        android:text="reset"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.156"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.402"
+
+        />
+
+    <Button
+        android:id="@+id/timelineButton"
+        android:layout_width="125dp"
+        android:layout_height="57dp"
+        android:background="@drawable/round_button"
+        android:gravity="center"
+        android:onClick="onClickWorkout"
+        android:text="Timeline"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        app:layout_constraintVertical_bias="0.403" />
+
+    <LinearLayout
+        android:layout_width="306dp"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.182">
+
+        <Button
+            android:layout_width="125dp"
+            android:layout_height="58dp"
+            android:layout_marginStart="21dp"
+            android:background="@drawable/round_button"
+            android:onClick="onClickDailyTasks"
+            android:text="Daily Tasks"
+            android:textAllCaps="false"
+
+            ></Button>
+
+        <Button
+            android:layout_width="125dp"
+            android:layout_height="58dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="0dp"
+            android:background="@drawable/round_button"
+            android:onClick="onClickWorkout"
+            android:text="Workout"
+            android:textAllCaps="false"
+
+            ></Button>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="277dp"
+        android:layout_height="41dp"
+        android:gravity="center"
+        android:text="Current biggest goal"
+        android:textColor="@color/black"
+        android:textSize="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.514" />
+
+    <TextView
+        android:id="@+id/goalTextView"
+        android:layout_width="277dp"
+        android:layout_height="53dp"
+        android:gravity="top|center_horizontal"
+        android:text="[enter a goal]"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        app:layout_constraintVertical_bias="0.582" />
+    <ImageButton
+        android:layout_width="21dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/pencil"
+        android:onClick="onClickEditGoal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.951"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.517" />
+    <TextView
+        android:layout_width="347dp"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:text="Your Placement (task streak)"
+        android:textColor="@color/black"
+        android:textSize="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.649" />
+
+
+    <TextView
+        android:id="@+id/placementTextView"
+        android:layout_width="265dp"
+        android:layout_height="20dp"
+        android:gravity="top|center_horizontal"
+        android:text="[not programmed yet]"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.697"
+
+        />
+
+
+    <TextView
+        android:layout_width="355dp"
+        android:layout_height="80dp"
+        android:background="@drawable/streaks_background"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.826">
+
+    </TextView>
+
+    <TextView
+        android:layout_width="55dp"
+        android:layout_height="60dp"
+        android:gravity="top|center_horizontal"
+        android:text="Current Tasks Streak"
+        android:textColor="@color/black"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.123"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        app:layout_constraintVertical_bias="0.81" />
+
+    <TextView
+        android:id="@+id/currentTaskStreakTextView"
+        android:layout_width="55dp"
+        android:layout_height="29dp"
+        android:gravity="top|center_horizontal"
+        android:text="4d"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.123"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.839" />
+
+    <TextView
+        android:id="@+id/LongestTaskStreakTextView"
+        android:layout_width="55dp"
+        android:layout_height="29dp"
+        android:gravity="top|center_horizontal"
+        android:text="4d"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.345"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.839" />
+
+    <TextView
+        android:id="@+id/randomChallengesAcceptedTextView"
+        android:layout_width="75dp"
+        android:layout_height="27dp"
+        android:gravity="top|center_horizontal"
+        android:text="4"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.595"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.839" />
+
+    <TextView
+        android:id="@+id/randomChallengesWonTextView"
+        android:layout_width="75dp"
+        android:layout_height="27dp"
+        android:gravity="top|center_horizontal"
+        android:text="4"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.86"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.839" />
+
+    <TextView
+        android:layout_width="55dp"
+        android:layout_height="60dp"
+        android:gravity="top|center_horizontal"
+        android:text="Longest Tasks Streak"
+        android:textColor="@color/black"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.345"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        app:layout_constraintVertical_bias="0.81" />
+
+    <TextView
+        android:layout_width="75dp"
+        android:layout_height="60dp"
+        android:gravity="top|center_horizontal"
+        android:text="Random Challenges Accepted"
+        android:textColor="@color/black"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.595"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        app:layout_constraintVertical_bias="0.81" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="75dp"
+        android:layout_height="60dp"
+        android:gravity="top|center_horizontal"
+        android:text="Random Challenges Won"
+        android:textColor="@color/black"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.86"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.81" />
+
+    <ImageButton
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/info"
+        android:onClick="onClickInfo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.991"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.648" />
+
+
+    <TextView
+        android:layout_width="355dp"
+        android:layout_height="50dp"
+        android:background="@drawable/streaks_background"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.923">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/tipOfTheDay"
+        android:layout_width="230dp"
+        android:layout_height="27dp"
+        android:layout_marginTop="25dp"
+        android:gravity="top|left"
+        android:text="Always do the hardest task first."
+        android:textColor="@color/black"
+        android:textSize="13dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.248"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.926" />
+
+    <TextView
+        android:layout_width="230dp"
+        android:layout_height="27dp"
+        android:gravity="top|left"
+        android:text="Tip Of The Day"
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.248"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        app:layout_constraintVertical_bias="0.9" />
+
+
+    <ImageButton
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/menu"
+        android:onClick="onClickMenu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.991"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.031" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

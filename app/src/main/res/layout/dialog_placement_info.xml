@@ -1,0 +1,36 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <ImageButton
+        android:id="@+id/exitDialogPlacement"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:background="@drawable/x"
+        android:layout_gravity="end"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top|center_horizontal"
+        android:text="Placement"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top|center_horizontal"
+        android:text="Your placement in your friends’ daily task streak leaderboard."
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:layout_marginTop="0dp"
+        />
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        ></Space>
+</LinearLayout>

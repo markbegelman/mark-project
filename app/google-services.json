@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "260687453199",
+    "project_id": "productivityapp-6a4a6",
+    "storage_bucket": "productivityapp-6a4a6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:260687453199:android:fabaa83d97ebe50b86577a",
+        "android_client_info": {
+          "package_name": "com.example.markproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMIBEzec2zbDYACt8YOlMO8dqEgESXPuA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
