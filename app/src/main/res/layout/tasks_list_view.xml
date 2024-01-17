@@ -1,46 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".DailyTasks">
+    android:layout_height="60dp"
+    tools:context=".DailyTasks"
 
+    >
 
     <LinearLayout
-
         android:layout_width="321dp"
-        android:layout_height="51dp"
-        android:background="@drawable/rectangle"
+        android:layout_height="50dp"
+        android:background="@drawable/tasks_background"
+        android:elevation="3dp"
+        android:layout_marginStart="10dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.177"
         app:layout_constraintStart_toStartOf="parent"
+
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.041">
+        app:layout_constraintVertical_bias="0.045">
 
         <CheckBox
             android:id="@+id/checkBox"
-            android:layout_width="24dp"
-            android:layout_height="22dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:scaleX="1.1"
-            android:scaleY="1.1"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="49dp" />
+            android:layout_marginTop="7dp"
+            android:scaleX="1.3"
+            android:scaleY="1.3"
+            android:onClick="onClickTick"
+            />
+
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="240dp"
-            android:layout_height="45dp"
+            android:layout_height="36dp"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:text="Do Homework"
             android:textColor="@color/black"
-            android:textSize="17dp"
+            android:textSize="20dp"
+            android:textStyle="normal"
 
             />
 
@@ -51,17 +56,13 @@
         android:id="@+id/imageButton"
         android:layout_width="22dp"
         android:layout_height="22dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12.5dp"
         android:adjustViewBounds="true"
         android:background="@null"
         android:onClick="onClickTrash"
         android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.922"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.059"
         app:srcCompat="@drawable/trash" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -1,26 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn = "navigation_view"
-    android:id="@+id/drawer_layout"
-    >
+    tools:showIn="navigation_view"
+    android:id="@+id/drawer_layout">
 
     <group
         android:checkableBehavior="single">
         <item
-            android:id="@+id/homeID"
-            android:title="home"
-            ></item>
+            android:id="@+id/homeMenu"
+            android:title="Home"/>
+
+        <item
+            android:id="@+id/profileMenu"
+            android:title="Profile"/>
+
+        <item
+            android:id="@+id/dailyTasksMenu"
+            android:title="Daily Tasks"/>
+        <item
+            android:id="@+id/workoutMenu"
+            android:title="Workout"/>
+        <item
+            android:id="@+id/oneVoneMenu"
+            android:title="1v1"/>
+        <item
+            android:id="@+id/randomChallengeMenu"
+            android:title="Random Challenge"/>
+        <item
+            android:id="@+id/timelineMenu"
+            android:title="Timeline"/>
+        <item
+            android:id="@+id/friendsMenu"
+            android:title="Friends"/>
     </group>
 
     <item
-        android:title="">
+        android:id="@+id/aboutMeMenu"
+        android:title="About Me"/>
+    <item
+        android:id="@+id/exitMenu"
+        android:title="Exit"/>
 
-        <menu>
-            <item
-                android:id="@+id/idk"
-                android:title="idk"
-                ></item>
-        </menu>
-        </item>
+    <item
+        android:id="@+id/logOutMenu"
+        android:title="Log Out"/>
 </menu>

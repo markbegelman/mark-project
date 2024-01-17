@@ -1,22 +1,25 @@
 package com.example.markproject;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
+@IgnoreExtraProperties
 public class User {
     public String email;
     public String password;
+    public String uId;
+    public String userName;
+    public String key;
 
-    public String getEmail() {
-        return email;
+    public User()
+    {
+
     }
 
-    public void setEmail(String email) {
+    public User(String email, String password, String uId, String userName, String key) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
         this.password = password;
+        this.uId = uId;
+        this.userName = userName;
+        this.key = key;
     }
 }
