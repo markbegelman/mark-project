@@ -41,7 +41,11 @@ public class TaskAdapter extends ArrayAdapter<Task> {
         Task temp = object.get(position);
         title.setText(temp.getTitle());
 
+        // Update CheckBox state based on the 'done' status of the task
+        checkBox.setChecked(temp.isDone());
+
         return view;
     }
+
 
 }

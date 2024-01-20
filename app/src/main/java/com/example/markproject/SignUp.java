@@ -85,19 +85,5 @@ public class SignUp extends AppCompatActivity {
 
     }
 
-    /*
-    public void onClickCamera(View view)//firebase take picture (appschool)
-    {
-        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                if(result.getResultCode()==RESULT_OK && result.getData()!=null){
-                    User.bitmap = (Bitmap)result.getData().getExtras().get("data");
-                    iv.setImageBitmap(User.bitmap);
-                }
-            }
-        });
-    }
 
-     */
 }
