@@ -9,6 +9,10 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "tasks.db";
     private static final int DATABASE_VERSION = 1;
 
+
+    //shura
+
+
     // Define your table and columns
     public static final String TABLE_TASKS = "tasks";
     public static final String COLUMN_ID = "_id";
