@@ -1,16 +1,16 @@
 package com.example.markproject;
 
-public class Task {
+public class Habit {
     private String title;
     private boolean done;
     private String key;
-    public Task(String title, boolean done)
+    public Habit(String title, boolean done)
     {
         this.title = title;
         this.done = done;
     }
 
-    public Task()
+    public Habit()
     {
 
     }

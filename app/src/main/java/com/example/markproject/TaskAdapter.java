@@ -7,23 +7,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
-public class TaskAdapter extends ArrayAdapter<Task> {
+public class TaskAdapter extends ArrayAdapter<Habit> {
     Context context;
-    List<Task> object;
+    List<Habit> object;
     CheckBox checkBox;
     ImageButton imgBtn;
     TextView tasksCompletedTV;
     int tasksCompleted = 0;
 
-    public TaskAdapter(Context context, List<Task> object) {
+    public TaskAdapter(Context context, List<Habit> object) {
         super(context, R.layout.activity_daily_tasks, object);
         this.context = context;
         this.object = object;
@@ -38,7 +35,7 @@ public class TaskAdapter extends ArrayAdapter<Task> {
         TextView title = view.findViewById(R.id.textView);
         ImageButton imgBtn = view.findViewById(R.id.imageButton);
 
-        Task temp = object.get(position);
+        Habit temp = object.get(position);
         title.setText(temp.getTitle());
 
         // Update CheckBox state based on the 'done' status of the task

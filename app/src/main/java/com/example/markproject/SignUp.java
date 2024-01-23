@@ -1,12 +1,7 @@
 package com.example.markproject;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -78,7 +73,7 @@ public class SignUp extends AppCompatActivity {
 
     public void addUserDetails(){
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
-        User user = new User(emailEditText.getText().toString(), passwordEditText.getText().toString(), uid, usernameEditText.getText().toString(), "");
+        UserProfile user = new UserProfile(emailEditText.getText().toString(), passwordEditText.getText().toString(), uid, usernameEditText.getText().toString(), "", 0);
         userRef = firebaseDatabase.getReference("Users").push();
         user.key = userRef.getKey();
         userRef.setValue(user);

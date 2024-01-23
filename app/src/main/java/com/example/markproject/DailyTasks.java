@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,7 +27,7 @@ import java.util.ArrayList;
 
 public class DailyTasks extends AppCompatActivity {
     DatabaseReference databaseReference;
-    ArrayList<Task> missionList;
+    ArrayList<Habit> missionList;
     ListView lv;
     TaskAdapter missionAdapter;
     int taskCompleted = 0;
@@ -59,7 +58,7 @@ public class DailyTasks extends AppCompatActivity {
                 missionList.clear();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Task task = dataSnapshot.getValue(Task.class);
+                    Habit task = dataSnapshot.getValue(Habit.class);
                     if (task != null) {
                         missionList.add(task);
                     }
@@ -86,7 +85,7 @@ public class DailyTasks extends AppCompatActivity {
         showDeleteConfirmationDialog(view);
     }
     private void deleteItem(int position) {
-        Task taskToDelete = missionList.get(position);
+        Habit taskToDelete = missionList.get(position);
 
         databaseReference.child(taskToDelete.getKey()).removeValue();
 
@@ -148,7 +147,7 @@ public class DailyTasks extends AppCompatActivity {
     public void onClickTick(View view)
     {
         int position = lv.getPositionForView((View) view.getParent());
-        Task task = missionList.get(position);
+        Habit task = missionList.get(position);
         String taskName = task.getTitle().toString();
         task.setDone(!task.isDone());
 
@@ -205,13 +204,13 @@ public class DailyTasks extends AppCompatActivity {
 
     public void createTask(String title, boolean isDone)
     {
-        Task newTask = new Task(title, isDone);
+        Habit newHabit = new Habit(title, isDone);
 
         String taskId = databaseReference.push().getKey();
-        newTask.setKey(taskId);
-        databaseReference.child(taskId).setValue(newTask);
+        newHabit.setKey(taskId);
+        databaseReference.child(taskId).setValue(newHabit);
 
-        missionList.add(newTask);
+        missionList.add(newHabit);
         missionAdapter = new TaskAdapter(this, missionList);
         lv = findViewById(R.id.Tasks);
         lv.setAdapter(missionAdapter);

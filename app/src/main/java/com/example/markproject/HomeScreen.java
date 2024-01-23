@@ -307,7 +307,6 @@ public class HomeScreen extends AppCompatActivity {
             case "home":
                 Intent intentHome = new Intent(getApplicationContext(), HomeScreen.class);
                 startActivity(intentHome);
-                finish();
                 break;
             case "log out":
                 logOut();
@@ -326,7 +325,6 @@ public class HomeScreen extends AppCompatActivity {
             case "daily tasks":
                 Intent intent2 = new Intent(getApplicationContext(), DailyTasks.class);
                 startActivity(intent2);
-                finish();
                 break;
 
 
@@ -358,7 +356,6 @@ public class HomeScreen extends AppCompatActivity {
             case "aboutMe":
                 Intent intent = new Intent(getApplicationContext(), AboutMe.class);
                 startActivity(intent);
-                finish();
                 break;
 
             case "exit":

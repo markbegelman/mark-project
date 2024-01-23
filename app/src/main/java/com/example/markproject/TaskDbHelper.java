@@ -15,7 +15,7 @@ public class TaskDbHelper {
         dbHelper = new DBHelper(context);
     }
 
-    public void saveTaskToSQLite(Task task) {
+    public void saveTaskToSQLite(Habit task) {
         // Open a writable database
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
@@ -29,8 +29,8 @@ public class TaskDbHelper {
         db.close();
     }
 
-    public List<Task> getAllTasks() {
-        List<Task> taskList = new ArrayList<>();
+    public List<Habit> getAllTasks() {
+        List<Habit> taskList = new ArrayList<>();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         // Query to fetch all tasks
@@ -44,7 +44,7 @@ public class TaskDbHelper {
                 boolean done = cursor.getInt(cursor.getColumnIndexOrThrow(DBHelper.COLUMN_DONE)) == 1;
 
                 // Create a new Task without setId
-                Task task = new Task(title, done);
+                Habit task = new Habit(title, done);
                 taskList.add(task);
             } while (cursor.moveToNext());
 
