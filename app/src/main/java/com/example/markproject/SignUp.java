@@ -11,6 +11,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.LinkedList;
+
 public class SignUp extends AppCompatActivity {
 
     EditText emailEditText, passwordEditText, usernameEditText;
@@ -72,8 +74,11 @@ public class SignUp extends AppCompatActivity {
     }
 
     public void addUserDetails(){
+        Habit habit1 = new Habit("example habit", false);
+        LinkedList<Habit> habitList = new LinkedList<>();
+        habitList.add(habit1);
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
-        UserProfile user = new UserProfile(emailEditText.getText().toString(), passwordEditText.getText().toString(), uid, usernameEditText.getText().toString(), "", 0);
+        UserProfile user = new UserProfile(emailEditText.getText().toString(), passwordEditText.getText().toString(), uid, usernameEditText.getText().toString(), "", 0, habitList);
         userRef = firebaseDatabase.getReference("Users").push();
         user.key = userRef.getKey();
         userRef.setValue(user);

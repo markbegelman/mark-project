@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class DailyTasks extends AppCompatActivity {
     DatabaseReference databaseReference;
@@ -169,12 +170,9 @@ public class DailyTasks extends AppCompatActivity {
 
     }
 
-    public void onClickAdd(View view) {
-        // Initialize and show the dialog
-        showAddTaskDialog();
-    }
 
-    private void showAddTaskDialog() {
+
+    public void onClickAdd(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         View dialogView = getLayoutInflater().inflate(R.layout.add_task_dialog, null);
@@ -214,8 +212,16 @@ public class DailyTasks extends AppCompatActivity {
         missionAdapter = new TaskAdapter(this, missionList);
         lv = findViewById(R.id.Tasks);
         lv.setAdapter(missionAdapter);
+
+        UserProfile userProfile = createUserProfileFromForm();
     }
 
+    public UserProfile createUserProfileFromForm(String userName, int habitStreak)
+    {
+        UserProfile userProfile;
+        LinkedList<Habit> habitList = userProfile.getHabits();
+        userProfile = UserProfile();
 
-
+        return userProfile;
+    }
 }
