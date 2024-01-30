@@ -2,11 +2,18 @@ package com.example.markproject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
@@ -16,7 +23,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,7 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.List;
 
 public class DailyTasks extends AppCompatActivity {
     DatabaseReference databaseReference;
@@ -42,7 +48,7 @@ public class DailyTasks extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_daily_tasks);
-        taskCompletedTV =  (TextView)findViewById(R.id.tasksCompleted);
+        taskCompletedTV = findViewById(R.id.tasksCompleted);
 
         missionList = new ArrayList<>();
         array_list = new ArrayList();
@@ -50,25 +56,58 @@ public class DailyTasks extends AppCompatActivity {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("tasks");
 
+        initializeMissionAdapter(); // Move the initialization logic here
+
         loadTasksFromFirebase();
+
+        if (!getCurrentDate().equals(getLastSaved())) {
+            resetTasks();
+        }
+    }
+
+
+
+    private void initializeMissionAdapter() {
+        missionAdapter = new TaskAdapter(DailyTasks.this, missionList);
+        lv = findViewById(R.id.Tasks);
+        lv.setAdapter(missionAdapter);
+    }
+    public void resetTasks() {
+        taskCompleted = 0;
+        taskCompletedTV.setText("No Tasks Completed");
+
+        ArrayList<Habit> clonedMissionList = new ArrayList<>(missionList);
+
+        for (Habit habit : clonedMissionList) {
+            habit.setDone(false);
+            // Update the task status in Firebase
+            databaseReference.child(habit.getKey()).child("done").setValue(false);
+        }
+
+        // Clear the original list and add all elements from the cloned list
+        missionList.clear();
+        missionList.addAll(clonedMissionList);
+
+        // Update the adapter and UI
+        missionAdapter.notifyDataSetChanged();
+    }
+
+
+    private String getCurrentDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(new Date());
     }
 
     private void loadTasksFromFirebase() {
-        DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("Users");
-
-        usersReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot usersSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 missionList.clear();
 
-                for (DataSnapshot userSnapshot : usersSnapshot.getChildren()) {
-                    DataSnapshot habitsSnapshot = userSnapshot.child("habits");
-
-                    for (DataSnapshot habitSnapshot : habitsSnapshot.getChildren()) {
-                        Habit task = habitSnapshot.getValue(Habit.class);
-                        if (task != null) {
-                            missionList.add(task);
-                        }
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Habit task = dataSnapshot.getValue(Habit.class);
+                    if (task != null) {
+                        missionList.add(task);
                     }
                 }
 
@@ -85,7 +124,20 @@ public class DailyTasks extends AppCompatActivity {
         });
     }
 
+    public void saveCurrentDate()
+    {
+        SharedPreferences preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("lastSavedDate", getCurrentDate());
+        editor.apply();
 
+    }
+    public String getLastSaved()
+    {
+        SharedPreferences preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        String lastSavedDate = preferences.getString("lastSavedDate", "No Date Available");
+        return lastSavedDate;
+    }
     public void onClickTrash(View view)
     {
         showDeleteDialog(view);
@@ -178,9 +230,12 @@ public class DailyTasks extends AppCompatActivity {
 
     }
 
-
-
     public void onClickAdd(View view) {
+        // Initialize and show the dialog
+        showAddTaskDialog();
+    }
+
+    private void showAddTaskDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         View dialogView = getLayoutInflater().inflate(R.layout.add_task_dialog, null);
@@ -207,23 +262,8 @@ public class DailyTasks extends AppCompatActivity {
         // Show the dialog
         dialog.show();
     }
-    private void createTask(String title, boolean isDone) {
-        String userKey = FirebaseAuth.getInstance().getCurrentUser().getKey();
-        DatabaseReference userHabitsReference = FirebaseDatabase.getInstance().getReference("Users")
-                .child(userKey)
-                .child("habits");
 
-        String habitId = userHabitsReference.push().getKey();
-        Habit newHabit = new Habit(title, isDone);
-        newHabit.setKey(habitId);
-
-        userHabitsReference.child(habitId).setValue(newHabit);
-    }
-
-
-
-    /*
-    public void createTask(String title, boolean isDone)// the old one
+    public void createTask(String title, boolean isDone)
     {
         Habit newHabit = new Habit(title, isDone);
 
@@ -236,38 +276,8 @@ public class DailyTasks extends AppCompatActivity {
         lv = findViewById(R.id.Tasks);
         lv.setAdapter(missionAdapter);
 
-        //UserProfile userProfile = createUserProfileFromForm();
     }
 
 
-    public void createTask(String title, boolean isDone) {
-        Habit newHabit = new Habit(title, isDone);
 
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        String habitId = databaseReference.child("Users").child(userId).push().getKey();
-
-        newHabit.setKey(habitId);
-        databaseReference.child("Users").child(userId).child(habitId).setValue(newHabit);
-
-        missionList.add(newHabit);
-        missionAdapter = new TaskAdapter(this, missionList);
-        lv = findViewById(R.id.Tasks);
-        lv.setAdapter(missionAdapter);
-    }
-
-     */
-
-
-
-    /*
-    public UserProfile createUserProfileFromForm(String userName, int habitStreak)
-    {
-        UserProfile userProfile;
-        LinkedList<Habit> habitList = userProfile.getHabits();
-        userProfile = UserProfile();
-
-        return userProfile;
-    }
-
-     */
 }
