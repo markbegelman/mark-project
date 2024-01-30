@@ -3,14 +3,17 @@ package com.example.markproject;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
@@ -20,7 +23,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,6 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DailyTasks extends AppCompatActivity {
     DatabaseReference databaseReference;
@@ -40,16 +43,12 @@ public class DailyTasks extends AppCompatActivity {
     ArrayAdapter arrayAdapter;
     private ListView listView;
     ArrayList array_list;
-    FirebaseDatabase firebaseDatabase;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_daily_tasks);
         taskCompletedTV = findViewById(R.id.tasksCompleted);
-        firebaseDatabase = FirebaseDatabase.getInstance();
-
 
         missionList = new ArrayList<>();
         array_list = new ArrayList();
@@ -57,9 +56,9 @@ public class DailyTasks extends AppCompatActivity {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("tasks");
 
-        initializeMissionAdapter();
+        initializeMissionAdapter(); // Move the initialization logic here
 
-        loadHabitsFromFirebase();
+        loadTasksFromFirebase();
 
         if (!getCurrentDate().equals(getLastSaved())) {
             resetTasks();
@@ -99,23 +98,23 @@ public class DailyTasks extends AppCompatActivity {
         return sdf.format(new Date());
     }
 
-    private void loadHabitsFromFirebase() {
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference userHabitsRef = firebaseDatabase.getReference("Users").child(userId).child("habits");
-
-        userHabitsRef.addValueEventListener(new ValueEventListener() {
+    private void loadTasksFromFirebase() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 missionList.clear();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Habit habit = dataSnapshot.getValue(Habit.class);
-                    if (habit != null) {
-                        missionList.add(habit);
+                    Habit task = dataSnapshot.getValue(Habit.class);
+                    if (task != null) {
+                        missionList.add(task);
                     }
                 }
 
-                missionAdapter.notifyDataSetChanged();
+                // Update the adapter and UI
+                missionAdapter = new TaskAdapter(DailyTasks.this, missionList);
+                lv = findViewById(R.id.Tasks);
+                lv.setAdapter(missionAdapter);
             }
 
             @Override
@@ -124,7 +123,6 @@ public class DailyTasks extends AppCompatActivity {
             }
         });
     }
-
 
     public void saveCurrentDate()
     {

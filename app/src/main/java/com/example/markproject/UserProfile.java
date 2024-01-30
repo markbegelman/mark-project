@@ -2,7 +2,9 @@ package com.example.markproject;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
-import java.util.ArrayList;
+import org.w3c.dom.Node;
+
+import java.util.LinkedList;
 
 @IgnoreExtraProperties
 public class UserProfile {
@@ -12,14 +14,23 @@ public class UserProfile {
     public String userName;
     public String key;
     public int habitStreak;
-    public ArrayList<Habit> habits;
+    public LinkedList<Habit> habits;
 
     public UserProfile()
     {
 
     }
-    public UserProfile(String email, String password, String uId, String userName, String key, int habitStreak, ArrayList<Habit> habits)
+    public UserProfile(String userName, int habitStreak, LinkedList<Habit> habits)
     {
+        this.userName = userName;
+        this.habitStreak = habitStreak;
+    }
+    public UserProfile(String userName, int habitStreak)
+    {
+        this.userName = userName;
+        this.habitStreak = habitStreak;
+    }
+    public UserProfile(String email, String password, String uId, String userName, String key, int habitStreak,LinkedList<Habit> habits) {
         this.email = email;
         this.password = password;
         this.uId = uId;
@@ -28,20 +39,14 @@ public class UserProfile {
         this.habitStreak = habitStreak;
         this.habits = habits;
     }
-    public UserProfile(String userName, int habitStreak)
-    {
-        this.userName = userName;
-        this.habitStreak = habitStreak;
-    }
-    public UserProfile(String email, String password, String uId, String userName, String key, int habitStreak) {
-        this.email = email;
-        this.password = password;
-        this.uId = uId;
-        this.userName = userName;
-        this.key = key;
-        this.habitStreak = habitStreak;
+
+    public LinkedList<Habit> getHabits() {
+        return habits;
     }
 
+    public void setHabits(LinkedList<Habit> habits) {
+        this.habits = habits;
+    }
 
     public String getEmail() {
         return email;
@@ -90,5 +95,4 @@ public class UserProfile {
     public void setHabitStreak(int habitStreak) {
         this.habitStreak = habitStreak;
     }
-
 }
