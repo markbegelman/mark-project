@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -53,15 +54,21 @@ public class DailyTasks extends AppCompatActivity {
     }
 
     private void loadTasksFromFirebase() {
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("Users");
+
+        usersReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onDataChange(@NonNull DataSnapshot usersSnapshot) {
                 missionList.clear();
 
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Habit task = dataSnapshot.getValue(Habit.class);
-                    if (task != null) {
-                        missionList.add(task);
+                for (DataSnapshot userSnapshot : usersSnapshot.getChildren()) {
+                    DataSnapshot habitsSnapshot = userSnapshot.child("habits");
+
+                    for (DataSnapshot habitSnapshot : habitsSnapshot.getChildren()) {
+                        Habit task = habitSnapshot.getValue(Habit.class);
+                        if (task != null) {
+                            missionList.add(task);
+                        }
                     }
                 }
 
@@ -77,6 +84,7 @@ public class DailyTasks extends AppCompatActivity {
             }
         });
     }
+
 
     public void onClickTrash(View view)
     {
@@ -199,8 +207,23 @@ public class DailyTasks extends AppCompatActivity {
         // Show the dialog
         dialog.show();
     }
+    private void createTask(String title, boolean isDone) {
+        String userKey = FirebaseAuth.getInstance().getCurrentUser().getKey();
+        DatabaseReference userHabitsReference = FirebaseDatabase.getInstance().getReference("Users")
+                .child(userKey)
+                .child("habits");
 
-    public void createTask(String title, boolean isDone)
+        String habitId = userHabitsReference.push().getKey();
+        Habit newHabit = new Habit(title, isDone);
+        newHabit.setKey(habitId);
+
+        userHabitsReference.child(habitId).setValue(newHabit);
+    }
+
+
+
+    /*
+    public void createTask(String title, boolean isDone)// the old one
     {
         Habit newHabit = new Habit(title, isDone);
 
@@ -213,9 +236,30 @@ public class DailyTasks extends AppCompatActivity {
         lv = findViewById(R.id.Tasks);
         lv.setAdapter(missionAdapter);
 
-        UserProfile userProfile = createUserProfileFromForm();
+        //UserProfile userProfile = createUserProfileFromForm();
     }
 
+
+    public void createTask(String title, boolean isDone) {
+        Habit newHabit = new Habit(title, isDone);
+
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String habitId = databaseReference.child("Users").child(userId).push().getKey();
+
+        newHabit.setKey(habitId);
+        databaseReference.child("Users").child(userId).child(habitId).setValue(newHabit);
+
+        missionList.add(newHabit);
+        missionAdapter = new TaskAdapter(this, missionList);
+        lv = findViewById(R.id.Tasks);
+        lv.setAdapter(missionAdapter);
+    }
+
+     */
+
+
+
+    /*
     public UserProfile createUserProfileFromForm(String userName, int habitStreak)
     {
         UserProfile userProfile;
@@ -224,4 +268,6 @@ public class DailyTasks extends AppCompatActivity {
 
         return userProfile;
     }
+
+     */
 }
