@@ -2,10 +2,14 @@ package com.example.markproject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -16,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,12 +40,16 @@ public class DailyTasks extends AppCompatActivity {
     ArrayAdapter arrayAdapter;
     private ListView listView;
     ArrayList array_list;
+    FirebaseDatabase firebaseDatabase;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_daily_tasks);
-        taskCompletedTV =  (TextView)findViewById(R.id.tasksCompleted);
+        taskCompletedTV = findViewById(R.id.tasksCompleted);
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
 
         missionList = new ArrayList<>();
         array_list = new ArrayList();
@@ -48,26 +57,65 @@ public class DailyTasks extends AppCompatActivity {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference("tasks");
 
-        loadTasksFromFirebase();
+        initializeMissionAdapter();
+
+        loadHabitsFromFirebase();
+
+        if (!getCurrentDate().equals(getLastSaved())) {
+            resetTasks();
+        }
     }
 
-    private void loadTasksFromFirebase() {
-        databaseReference.addValueEventListener(new ValueEventListener() {
+
+
+    private void initializeMissionAdapter() {
+        missionAdapter = new TaskAdapter(DailyTasks.this, missionList);
+        lv = findViewById(R.id.Tasks);
+        lv.setAdapter(missionAdapter);
+    }
+    public void resetTasks() {
+        taskCompleted = 0;
+        taskCompletedTV.setText("No Tasks Completed");
+
+        ArrayList<Habit> clonedMissionList = new ArrayList<>(missionList);
+
+        for (Habit habit : clonedMissionList) {
+            habit.setDone(false);
+            // Update the task status in Firebase
+            databaseReference.child(habit.getKey()).child("done").setValue(false);
+        }
+
+        // Clear the original list and add all elements from the cloned list
+        missionList.clear();
+        missionList.addAll(clonedMissionList);
+
+        // Update the adapter and UI
+        missionAdapter.notifyDataSetChanged();
+    }
+
+
+    private String getCurrentDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(new Date());
+    }
+
+    private void loadHabitsFromFirebase() {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference userHabitsRef = firebaseDatabase.getReference("Users").child(userId).child("habits");
+
+        userHabitsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 missionList.clear();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Habit task = dataSnapshot.getValue(Habit.class);
-                    if (task != null) {
-                        missionList.add(task);
+                    Habit habit = dataSnapshot.getValue(Habit.class);
+                    if (habit != null) {
+                        missionList.add(habit);
                     }
                 }
 
-                // Update the adapter and UI
-                missionAdapter = new TaskAdapter(DailyTasks.this, missionList);
-                lv = findViewById(R.id.Tasks);
-                lv.setAdapter(missionAdapter);
+                missionAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -77,6 +125,21 @@ public class DailyTasks extends AppCompatActivity {
         });
     }
 
+
+    public void saveCurrentDate()
+    {
+        SharedPreferences preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("lastSavedDate", getCurrentDate());
+        editor.apply();
+
+    }
+    public String getLastSaved()
+    {
+        SharedPreferences preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        String lastSavedDate = preferences.getString("lastSavedDate", "No Date Available");
+        return lastSavedDate;
+    }
     public void onClickTrash(View view)
     {
         showDeleteDialog(view);
@@ -214,6 +277,7 @@ public class DailyTasks extends AppCompatActivity {
         missionAdapter = new TaskAdapter(this, missionList);
         lv = findViewById(R.id.Tasks);
         lv.setAdapter(missionAdapter);
+
     }
 
 

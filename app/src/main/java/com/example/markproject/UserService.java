@@ -8,25 +8,25 @@ import com.google.firebase.firestore.auth.User;
 
 import java.util.HashMap;
 import java.util.Objects;
+import com.example.markproject.UserService;
 
 public class UserService {
-    static UserProfile myUser;
+    public static UserProfile myUser;
 
-    static Task<Void> setMyUser(UserProfile user)
-    {
+    static Task<Void> setMyUser(UserProfile user) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference ref = database.getReference("users/" + userId);
+        DatabaseReference ref = database.getReference("users/" + user.getUserName());
 
         HashMap<String, Object> userMap = new HashMap<>();
         userMap.put("userName", user.getUserName());
         userMap.put("habitStreak", user.getHabitStreak());
 
         return ref.setValue(userMap).addOnCompleteListener(task -> {
-            if(task.isSuccessful())
+            if (task.isSuccessful())
                 myUser = user;
         });
     }
+
     static Task<UserProfile> getUserById(String userId)
     {
         FirebaseDatabase database = FirebaseDatabase.getInstance();

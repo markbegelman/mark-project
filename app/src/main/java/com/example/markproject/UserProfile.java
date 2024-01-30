@@ -2,6 +2,8 @@ package com.example.markproject;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.util.ArrayList;
+
 @IgnoreExtraProperties
 public class UserProfile {
     public String email;
@@ -10,10 +12,21 @@ public class UserProfile {
     public String userName;
     public String key;
     public int habitStreak;
+    public ArrayList<Habit> habits;
 
     public UserProfile()
     {
 
+    }
+    public UserProfile(String email, String password, String uId, String userName, String key, int habitStreak, ArrayList<Habit> habits)
+    {
+        this.email = email;
+        this.password = password;
+        this.uId = uId;
+        this.userName = userName;
+        this.key = key;
+        this.habitStreak = habitStreak;
+        this.habits = habits;
     }
     public UserProfile(String userName, int habitStreak)
     {
@@ -77,4 +90,5 @@ public class UserProfile {
     public void setHabitStreak(int habitStreak) {
         this.habitStreak = habitStreak;
     }
+
 }

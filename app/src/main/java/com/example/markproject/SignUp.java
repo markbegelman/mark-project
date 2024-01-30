@@ -71,14 +71,21 @@ public class SignUp extends AppCompatActivity {
         finish();
     }
 
-    public void addUserDetails(){
+    public void addUserDetails() {
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
         UserProfile user = new UserProfile(emailEditText.getText().toString(), passwordEditText.getText().toString(), uid, usernameEditText.getText().toString(), "", 0);
         userRef = firebaseDatabase.getReference("Users").push();
         user.key = userRef.getKey();
         userRef.setValue(user);
 
+        Habit newHabit = new Habit("Your initial habit or any default value", false);
+
+        DatabaseReference userHabitsRef = firebaseDatabase.getReference("Users").child(user.key).child("habits");
+        String habitId = userHabitsRef.push().getKey();
+        userHabitsRef.child(habitId).setValue(newHabit);
     }
+
+
 
 
 }
