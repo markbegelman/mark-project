@@ -210,9 +210,17 @@ public class DailyTasks extends AppCompatActivity {
 
     }
 
+    /*
     public void onClickTick(View view) {
         int position = lv.getPositionForView((View) view.getParent());
         Habit task = missionList.get(position);
+        String taskNameFirebase = task.getKey();
+        // Check if the habit has a valid key
+        if (task.getKey() == null) {
+            // Handle the error or return
+            return;
+        }
+
         String taskName = task.getTitle();
 
         // Toggle the isDone field
@@ -220,8 +228,8 @@ public class DailyTasks extends AppCompatActivity {
 
         // Update the habit in the Firebase Realtime Database
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference habitsReference = FirebaseDatabase.getInstance().getReference("Users/" + userId + "/habits" );
-        habitsReference.child(task.getKey()).setValue(task);
+        DatabaseReference habitsReference = FirebaseDatabase.getInstance().getReference("Users/" + userId + "/habits");
+        habitsReference.child(task.getKey()).child("isDone").setValue(!task.isDone());
 
         missionAdapter.notifyDataSetChanged();
 
@@ -234,9 +242,10 @@ public class DailyTasks extends AppCompatActivity {
             taskCompleted();
         }
     }
+    */
 
 
-    public void onClickAdd(View view) {
+        public void onClickAdd(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         View dialogView = getLayoutInflater().inflate(R.layout.add_task_dialog, null);
@@ -279,9 +288,6 @@ public class DailyTasks extends AppCompatActivity {
         missionAdapter = new TaskAdapter(this, missionList);
         lv = findViewById(R.id.Tasks);
         lv.setAdapter(missionAdapter);
+
     }
-
-
-
-
 }
