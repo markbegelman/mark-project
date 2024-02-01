@@ -14,11 +14,14 @@ public class UserService {
 
     static Task<Void> setMyUser(UserProfile user) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("users/" + user.getUserName());
+        DatabaseReference ref = database.getReference("Users/" + FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         HashMap<String, Object> userMap = new HashMap<>();
         userMap.put("userName", user.getUserName());
         userMap.put("habitStreak", user.getHabitStreak());
+        userMap.put("email",user.getEmail());
+        userMap.put("habits",user.getHabits());
+
 
         return ref.setValue(userMap).addOnCompleteListener(task -> {
             if (task.isSuccessful())

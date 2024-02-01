@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -54,7 +55,7 @@ public class DailyTasks extends AppCompatActivity {
         array_list = new ArrayList();
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("tasks");
+        databaseReference = firebaseDatabase.getReference("habits");
 
         initializeMissionAdapter(); // Move the initialization logic here
 
@@ -99,7 +100,10 @@ public class DailyTasks extends AppCompatActivity {
     }
 
     private void loadTasksFromFirebase() {
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference habitsReference = FirebaseDatabase.getInstance().getReference("Users/" + userId + "/habits");
+
+        habitsReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 missionList.clear();
@@ -123,6 +127,7 @@ public class DailyTasks extends AppCompatActivity {
             }
         });
     }
+
 
     public void saveCurrentDate()
     {
@@ -205,37 +210,33 @@ public class DailyTasks extends AppCompatActivity {
 
     }
 
-    public void onClickTick(View view)
-    {
+    public void onClickTick(View view) {
         int position = lv.getPositionForView((View) view.getParent());
         Habit task = missionList.get(position);
-        String taskName = task.getTitle().toString();
+        String taskName = task.getTitle();
+
+        // Toggle the isDone field
         task.setDone(!task.isDone());
 
-        databaseReference.child(task.getKey()).setValue(task);
+        // Update the habit in the Firebase Realtime Database
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference habitsReference = FirebaseDatabase.getInstance().getReference("Users/" + userId + "/habits" );
+        habitsReference.child(task.getKey()).setValue(task);
+
         missionAdapter.notifyDataSetChanged();
 
-
-        if(task.isDone())
-        {
+        if (task.isDone()) {
             taskCompleted++;
             taskCompleted();
-            Toast.makeText(this,  taskName + " completed", Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
+            Toast.makeText(this, taskName + " completed", Toast.LENGTH_SHORT).show();
+        } else {
             taskCompleted--;
             taskCompleted();
         }
-
     }
+
 
     public void onClickAdd(View view) {
-        // Initialize and show the dialog
-        showAddTaskDialog();
-    }
-
-    private void showAddTaskDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         View dialogView = getLayoutInflater().inflate(R.layout.add_task_dialog, null);
@@ -263,20 +264,23 @@ public class DailyTasks extends AppCompatActivity {
         dialog.show();
     }
 
-    public void createTask(String title, boolean isDone)
-    {
+
+    public void createTask(String title, boolean isDone) {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference habitsReference = FirebaseDatabase.getInstance().getReference("Users/" + userId + "/habits");
+
         Habit newHabit = new Habit(title, isDone);
 
-        String taskId = databaseReference.push().getKey();
+        String taskId = habitsReference.push().getKey();
         newHabit.setKey(taskId);
-        databaseReference.child(taskId).setValue(newHabit);
+        habitsReference.child(taskId).setValue(newHabit);
 
         missionList.add(newHabit);
         missionAdapter = new TaskAdapter(this, missionList);
         lv = findViewById(R.id.Tasks);
         lv.setAdapter(missionAdapter);
-
     }
+
 
 
 
