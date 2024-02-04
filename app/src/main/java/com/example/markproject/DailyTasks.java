@@ -23,6 +23,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class DailyTasks extends AppCompatActivity {
@@ -49,14 +52,17 @@ public class DailyTasks extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_daily_tasks);
         taskCompletedTV = findViewById(R.id.tasksCompleted);
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
 
+        String userId = currentUser.getUid();
         missionList = new ArrayList<>();
         array_list = new ArrayList();
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference("tasks");
+        databaseReference = firebaseDatabase.getReference("Users");
 
-        initializeMissionAdapter(); // Move the initialization logic here
+        initializeMissionAdapter();
 
         loadTasksFromFirebase();
 
@@ -80,15 +86,12 @@ public class DailyTasks extends AppCompatActivity {
 
         for (Habit habit : clonedMissionList) {
             habit.setDone(false);
-            // Update the task status in Firebase
             databaseReference.child(habit.getKey()).child("done").setValue(false);
         }
 
-        // Clear the original list and add all elements from the cloned list
         missionList.clear();
         missionList.addAll(clonedMissionList);
 
-        // Update the adapter and UI
         missionAdapter.notifyDataSetChanged();
     }
 
@@ -99,19 +102,33 @@ public class DailyTasks extends AppCompatActivity {
     }
 
     private void loadTasksFromFirebase() {
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("Users");
+
+        usersReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onDataChange(@NonNull DataSnapshot usersSnapshot) {
                 missionList.clear();
 
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Habit task = dataSnapshot.getValue(Habit.class);
-                    if (task != null) {
-                        missionList.add(task);
+                // Loop through each user in the "Users" node
+                for (DataSnapshot userSnapshot : usersSnapshot.getChildren()) {
+                    // Assuming that each user has a "habits" node
+                    DataSnapshot habitsSnapshot = userSnapshot.child("habits");
+
+                    // Loop through each habit in the "habits" node
+                    for (DataSnapshot habitSnapshot : habitsSnapshot.getChildren()) {
+                        // Check if the habit data is of type HashMap
+                        if (habitSnapshot.getValue() instanceof HashMap) {
+                            // Convert the habit data to a Habit object
+                            Habit task = habitSnapshot.getValue(Habit.class);
+
+                            // Check if the conversion was successful before adding to the list
+                            if (task != null) {
+                                missionList.add(task);
+                            }
+                        }
                     }
                 }
 
-                // Update the adapter and UI
                 missionAdapter = new TaskAdapter(DailyTasks.this, missionList);
                 lv = findViewById(R.id.Tasks);
                 lv.setAdapter(missionAdapter);
@@ -119,10 +136,12 @@ public class DailyTasks extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Handle the error
+                // Handle any errors that occur during data retrieval
             }
         });
     }
+
+
 
     public void saveCurrentDate()
     {
@@ -209,7 +228,7 @@ public class DailyTasks extends AppCompatActivity {
     {
         int position = lv.getPositionForView((View) view.getParent());
         Habit task = missionList.get(position);
-        String taskName = task.getTitle().toString();
+
         task.setDone(!task.isDone());
 
         databaseReference.child(task.getKey()).setValue(task);
@@ -220,7 +239,7 @@ public class DailyTasks extends AppCompatActivity {
         {
             taskCompleted++;
             taskCompleted();
-            Toast.makeText(this,  taskName + " completed", Toast.LENGTH_SHORT).show();
+
         }
         else
         {
@@ -230,12 +249,8 @@ public class DailyTasks extends AppCompatActivity {
 
     }
 
-    public void onClickAdd(View view) {
-        // Initialize and show the dialog
-        showAddTaskDialog();
-    }
 
-    private void showAddTaskDialog() {
+    public void onClickAdd(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         View dialogView = getLayoutInflater().inflate(R.layout.add_task_dialog, null);
@@ -258,25 +273,27 @@ public class DailyTasks extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-
-        // Show the dialog
         dialog.show();
     }
 
     public void createTask(String title, boolean isDone)
     {
-        Habit newHabit = new Habit(title, isDone);
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        String taskId = databaseReference.push().getKey();
+        String userId = currentUser.getUid();
+
+        Habit newHabit = new Habit(title, isDone);
+        String taskId = databaseReference.child(userId).child("habits").push().getKey();
         newHabit.setKey(taskId);
-        databaseReference.child(taskId).setValue(newHabit);
+        databaseReference.child(userId).child("habits").child(taskId).setValue(newHabit);
 
         missionList.add(newHabit);
         missionAdapter = new TaskAdapter(this, missionList);
         lv = findViewById(R.id.Tasks);
         lv.setAdapter(missionAdapter);
-
     }
+
 
 
 

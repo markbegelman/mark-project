@@ -78,9 +78,8 @@ public class SignUp extends AppCompatActivity {
         LinkedList<Habit> habitList = new LinkedList<>();
         habitList.add(habit1);
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
-        UserProfile user = new UserProfile(emailEditText.getText().toString(), passwordEditText.getText().toString(), uid, usernameEditText.getText().toString(), "", 0, habitList);
+        UserProfile user = new UserProfile(emailEditText.getText().toString(), passwordEditText.getText().toString(), uid, usernameEditText.getText().toString(), 0, habitList);
         userRef = firebaseDatabase.getReference("Users").push();
-        user.key = userRef.getKey();
         userRef.setValue(user);
 
     }
