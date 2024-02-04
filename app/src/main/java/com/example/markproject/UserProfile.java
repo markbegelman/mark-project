@@ -12,7 +12,6 @@ public class UserProfile {
     public String password;
     public String uId;
     public String userName;
-    public String key;
     public int habitStreak;
     public LinkedList<Habit> habits;
 
@@ -77,14 +76,6 @@ public class UserProfile {
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
     }
 
     public int getHabitStreak() {
