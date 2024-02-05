@@ -1,5 +1,7 @@
 package com.example.markproject;
 
+import static com.example.markproject.UserService.setMyUser;
+
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -74,13 +76,11 @@ public class SignUp extends AppCompatActivity {
     }
 
     public void addUserDetails(){
-        Habit habit1 = new Habit("example habit", false);
         LinkedList<Habit> habitList = new LinkedList<>();
-        habitList.add(habit1);
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
-        UserProfile user = new UserProfile(emailEditText.getText().toString(), passwordEditText.getText().toString(), uid, usernameEditText.getText().toString(), 0, habitList);
-        userRef = firebaseDatabase.getReference("Users").push();
-        userRef.setValue(user);
+        UserProfile user = new UserProfile(emailEditText.getText().toString(), passwordEditText.getText().toString(), uid, usernameEditText.getText().toString(), 0, habitList, 0);
+        setMyUser(user);
+
 
     }
 

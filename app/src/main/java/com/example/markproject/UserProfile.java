@@ -14,6 +14,15 @@ public class UserProfile {
     public String userName;
     public int habitStreak;
     public LinkedList<Habit> habits;
+    public int tasksCompleted;
+
+    public int getTasksCompleted() {
+        return tasksCompleted;
+    }
+
+    public void setTasksCompleted(int tasksCompleted) {
+        this.tasksCompleted = tasksCompleted;
+    }
 
     public UserProfile()
     {
@@ -29,13 +38,14 @@ public class UserProfile {
         this.userName = userName;
         this.habitStreak = habitStreak;
     }
-    public UserProfile(String email, String password, String uId, String userName, int habitStreak,LinkedList<Habit> habits) {
+    public UserProfile(String email, String password, String uId, String userName, int habitStreak,LinkedList<Habit> habits, int tasksCompleted) {
         this.email = email;
         this.password = password;
         this.uId = uId;
         this.userName = userName;
         this.habitStreak = habitStreak;
         this.habits = habits;
+        this.tasksCompleted = tasksCompleted;
     }
 
     public LinkedList<Habit> getHabits() {

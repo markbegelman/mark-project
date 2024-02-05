@@ -40,6 +40,7 @@ public class TaskAdapter extends ArrayAdapter<Habit> {
 
         checkBox.setChecked(temp.isDone());
 
+        /*
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,6 +57,8 @@ public class TaskAdapter extends ArrayAdapter<Habit> {
             }
         });
 
+
+         */
         return view;
     }
 

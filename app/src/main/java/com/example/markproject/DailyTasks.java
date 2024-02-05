@@ -47,15 +47,18 @@ public class DailyTasks extends AppCompatActivity {
     private ListView listView;
     ArrayList array_list;
 
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseUser currentUser = mAuth.getCurrentUser();
+    String userId = currentUser.getUid();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_daily_tasks);
         taskCompletedTV = findViewById(R.id.tasksCompleted);
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        String userId = currentUser.getUid();
+
+
+
         missionList = new ArrayList<>();
         array_list = new ArrayList();
 
@@ -64,7 +67,7 @@ public class DailyTasks extends AppCompatActivity {
 
         initializeMissionAdapter();
 
-        loadTasksFromFirebase();
+        loadTasksFromFirebase(userId);
 
         if (!getCurrentDate().equals(getLastSaved())) {
             resetTasks();
@@ -101,37 +104,50 @@ public class DailyTasks extends AppCompatActivity {
         return sdf.format(new Date());
     }
 
-    private void loadTasksFromFirebase() {
-        DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("Users");
+    // Inside your DailyTasks class
 
-        usersReference.addValueEventListener(new ValueEventListener() {
+    private void loadTasksFromFirebase(String userId) {
+        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("Users").child(userId);
+
+        // Listen for changes in the "tasksCompleted" node
+        userReference.child("tasksCompleted").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot usersSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Retrieve the tasksCompleted value from Firebase
+                if (dataSnapshot.exists()) {
+                    taskCompleted = dataSnapshot.getValue(Integer.class);
+                    taskCompleted();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle any errors that occur during data retrieval
+            }
+        });
+
+        // Listen for changes in the "habits" node
+        userReference.child("habits").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot habitsSnapshot) {
                 missionList.clear();
 
-                // Loop through each user in the "Users" node
-                for (DataSnapshot userSnapshot : usersSnapshot.getChildren()) {
-                    // Assuming that each user has a "habits" node
-                    DataSnapshot habitsSnapshot = userSnapshot.child("habits");
+                // Loop through each habit in the "habits" node
+                for (DataSnapshot habitSnapshot : habitsSnapshot.getChildren()) {
+                    // Check if the habit data is of type HashMap
+                    if (habitSnapshot.getValue() instanceof HashMap) {
+                        // Convert the habit data to a Habit object
+                        Habit task = habitSnapshot.getValue(Habit.class);
 
-                    // Loop through each habit in the "habits" node
-                    for (DataSnapshot habitSnapshot : habitsSnapshot.getChildren()) {
-                        // Check if the habit data is of type HashMap
-                        if (habitSnapshot.getValue() instanceof HashMap) {
-                            // Convert the habit data to a Habit object
-                            Habit task = habitSnapshot.getValue(Habit.class);
-
-                            // Check if the conversion was successful before adding to the list
-                            if (task != null) {
-                                missionList.add(task);
-                            }
+                        // Check if the conversion was successful before adding to the list
+                        if (task != null) {
+                            missionList.add(task);
                         }
                     }
                 }
 
-                missionAdapter = new TaskAdapter(DailyTasks.this, missionList);
-                lv = findViewById(R.id.Tasks);
-                lv.setAdapter(missionAdapter);
+                // Update the UI with the loaded tasks
+                missionAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -140,6 +156,9 @@ public class DailyTasks extends AppCompatActivity {
             }
         });
     }
+
+
+
 
 
 
@@ -157,24 +176,28 @@ public class DailyTasks extends AppCompatActivity {
         String lastSavedDate = preferences.getString("lastSavedDate", "No Date Available");
         return lastSavedDate;
     }
-    public void onClickTrash(View view)
-    {
-        showDeleteDialog(view);
-    }
-    public void showDeleteDialog(View view) {
-        showDeleteConfirmationDialog(view);
-    }
-    private void deleteItem(int position) {
-        Habit taskToDelete = missionList.get(position);
 
-        databaseReference.child(taskToDelete.getKey()).removeValue();
+
+    private void deleteItem(int position) {
+
+        Habit taskToDelete = missionList.get(position);
+        String taskKey = taskToDelete.getKey();
+
+        if(taskToDelete.isDone())
+        {
+            taskCompleted--;
+            taskCompleted();
+        }
+
+        databaseReference.child(userId).child("habits").child(taskKey).removeValue();
 
         missionList.remove(position);
         missionAdapter.notifyDataSetChanged();
+
     }
 
 
-    private void showDeleteConfirmationDialog(View view) {
+    public void onClickTrash(View view) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.delete_dialog_layout);
@@ -229,12 +252,11 @@ public class DailyTasks extends AppCompatActivity {
         int position = lv.getPositionForView((View) view.getParent());
         Habit task = missionList.get(position);
 
+        String taskKey = task.getKey();
         task.setDone(!task.isDone());
 
-        databaseReference.child(task.getKey()).setValue(task);
-        missionAdapter.notifyDataSetChanged();
 
-
+        databaseReference.child(userId).child("habits").child(taskKey).child("done").setValue(task.isDone());
         if(task.isDone())
         {
             taskCompleted++;
@@ -246,7 +268,7 @@ public class DailyTasks extends AppCompatActivity {
             taskCompleted--;
             taskCompleted();
         }
-
+        databaseReference.child(userId).child("tasksCompleted").setValue(taskCompleted);
     }
 
 
@@ -293,8 +315,4 @@ public class DailyTasks extends AppCompatActivity {
         lv = findViewById(R.id.Tasks);
         lv.setAdapter(missionAdapter);
     }
-
-
-
-
 }

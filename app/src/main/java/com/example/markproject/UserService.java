@@ -21,6 +21,7 @@ public class UserService {
         userMap.put("habitStreak", user.getHabitStreak());
         userMap.put("email",user.getEmail());
         userMap.put("habits",user.getHabits());
+        userMap.put("tasksCompleted",user.getTasksCompleted());
 
 
         return ref.setValue(userMap).addOnCompleteListener(task -> {
@@ -32,7 +33,7 @@ public class UserService {
     static Task<UserProfile> getUserById(String userId)
     {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("users/" + userId);
+        DatabaseReference ref = database.getReference("Users/" + userId);
 
         return ref.get().continueWith(task -> {
            if(task.isSuccessful()){
