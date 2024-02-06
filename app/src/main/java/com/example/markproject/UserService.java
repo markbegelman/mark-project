@@ -7,29 +7,33 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 import java.util.Objects;
+import com.example.markproject.UserService;
 
 public class UserService {
-    static UserProfile myUser;
+    public static UserProfile myUser;
 
-    static Task<Void> setMyUser(UserProfile user)
-    {
+    static Task<Void> setMyUser(UserProfile user) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference ref = database.getReference("users/" + userId);
+        DatabaseReference ref = database.getReference("Users/" + FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         HashMap<String, Object> userMap = new HashMap<>();
         userMap.put("userName", user.getUserName());
         userMap.put("habitStreak", user.getHabitStreak());
+        userMap.put("email",user.getEmail());
+        userMap.put("habits",user.getHabits());
+        userMap.put("tasksCompleted",user.getTasksCompleted());
+
 
         return ref.setValue(userMap).addOnCompleteListener(task -> {
-            if(task.isSuccessful())
+            if (task.isSuccessful())
                 myUser = user;
         });
     }
+
     static Task<UserProfile> getUserById(String userId)
     {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("users/" + userId);
+        DatabaseReference ref = database.getReference("Users/" + userId);
 
         return ref.get().continueWith(task -> {
            if(task.isSuccessful()){
