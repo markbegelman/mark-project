@@ -106,5 +106,13 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/dateForDebuggingTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="324dp"
+        tools:layout_editor_absoluteY="7dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

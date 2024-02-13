@@ -46,6 +46,7 @@ public class DailyTasks extends AppCompatActivity {
     ArrayAdapter arrayAdapter;
     private ListView listView;
     ArrayList array_list;
+    TextView dateForDebuggingTV;
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -55,9 +56,9 @@ public class DailyTasks extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_daily_tasks);
         taskCompletedTV = findViewById(R.id.tasksCompleted);
+        dateForDebuggingTV = findViewById(R.id.dateForDebuggingTV);
 
-
-
+        setDate();
 
         missionList = new ArrayList<>();
         array_list = new ArrayList();
@@ -75,6 +76,11 @@ public class DailyTasks extends AppCompatActivity {
     }
 
 
+    public void setDate()
+    {
+        String lastSaved = getLastSaved();
+        dateForDebuggingTV.setText(lastSaved);
+    }
 
     private void initializeMissionAdapter() {
         missionAdapter = new TaskAdapter(DailyTasks.this, missionList);
@@ -157,19 +163,13 @@ public class DailyTasks extends AppCompatActivity {
         });
     }
 
-
-
-
-
-
-    public void saveCurrentDate()
-    {
+    public void setLastSaved() {
         SharedPreferences preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("lastSavedDate", getCurrentDate());
         editor.apply();
-
     }
+
     public String getLastSaved()
     {
         SharedPreferences preferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
@@ -249,6 +249,8 @@ public class DailyTasks extends AppCompatActivity {
 
     public void onClickTick(View view)
     {
+        setLastSaved();
+        Toast.makeText(this, getLastSaved(), Toast.LENGTH_SHORT).show();
         int position = lv.getPositionForView((View) view.getParent());
         Habit task = missionList.get(position);
 
